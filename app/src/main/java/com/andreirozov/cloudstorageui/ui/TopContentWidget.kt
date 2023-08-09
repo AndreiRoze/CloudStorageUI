@@ -138,7 +138,10 @@ private fun GoogleDriveCanvas(googleDriveState: Boolean) {
     val googleThirdNoteMeasurer = rememberTextMeasurer()
 
     // Scale of Google Drive button
-    val googleDriveScale by animateFloatAsState(if (googleDriveState) 0.96f else 1f)
+    val googleDriveScale by animateFloatAsState(
+        targetValue = if (googleDriveState) 0.96f else 1f,
+        label = "Google Drive scale animation"
+    )
 
     Canvas(
         modifier = Modifier
@@ -168,7 +171,10 @@ private fun ICloudCanvas(iCloudState: Boolean) {
     val iCloudThirdNoteMeasurer = rememberTextMeasurer()
 
     // Scale of iCloud button
-    val iCloudScale by animateFloatAsState(if (iCloudState) 0.96f else 1f)
+    val iCloudScale by animateFloatAsState(
+        targetValue = if (iCloudState) 0.96f else 1f,
+        label = "iCloud scale animation"
+    )
 
     Canvas(
         modifier = Modifier
