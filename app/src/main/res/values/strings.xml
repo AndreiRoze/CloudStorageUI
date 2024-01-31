@@ -1,3 +1,31 @@
 <resources>
+    <!-- Common-->
     <string name="app_name">Cloud storage UI</string>
+
+    <!-- Header widget-->
+    <string name="my_storage">my\nstorage</string>
+    <string name="menu_click">Menu click</string>
+    <string name="menu_button">Menu button</string>
+
+    <!-- Top content widget-->
+    <string name="google_drive_click">Google Drive click</string>
+    <string name="icloud_click">iCloud click</string>
+    <string name="google_drive_scale_animation">Google Drive scale animation</string>
+    <string name="icloud_scale_animation">iCloud scale animation</string>
+    <string name="google_drive">Google\nDrive</string>
+    <string name="gb_144">144 GB</string>
+    <string name="photos_video_games">photos * video * games</string>
+    <string name="documents_pdf_files">documents * PDF files</string>
+    <string name="icons_shots">icons * shots</string>
+    <string name="icloud">\niCloud</string>
+    <string name="music">music</string>
+    <string name="podcasts">podcasts</string>
+    <string name="design_courses">design courses</string>
+
+    <!-- Bottom content widget-->
+    <string name="dropbox_click">Dropbox click</string>
+    <string name="dropbox_scale_animation">Dropbox scale animation</string>
+    <string name="dropbox">Dropbox</string>
+    <string name="gb_28">28 GB</string>
+    <string name="gb_19">19 GB</string>
 </resources>

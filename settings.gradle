@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Cloud storage UI"
-include ':app'
+include ":app"

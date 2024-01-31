@@ -1,5 +1,6 @@
 package com.andreirozov.cloudstorageui.ui
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextMeasurer
@@ -39,6 +41,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.andreirozov.cloudstorageui.R
 import com.andreirozov.cloudstorageui.Utils
 import com.andreirozov.cloudstorageui.ui.theme.DarkBlue
 import com.andreirozov.cloudstorageui.ui.theme.Orange
@@ -102,14 +105,12 @@ fun TopContentWidget() {
 
                     // Buttons click events
                     if (this.currentEvent.type == PointerEventType.Release && isGoogleDriveTouch) {
-                        // TODO Google Drive click event
                         Toast
-                            .makeText(context, "Google Drive click", Toast.LENGTH_SHORT)
+                            .makeText(context, R.string.google_drive_click, Toast.LENGTH_SHORT)
                             .show()
                     } else if (this.currentEvent.type == PointerEventType.Release && isICloudTouch) {
-                        // TODO iCloud click event
                         Toast
-                            .makeText(context, "iCloud click", Toast.LENGTH_SHORT)
+                            .makeText(context, R.string.icloud_click, Toast.LENGTH_SHORT)
                             .show()
                     }
 
@@ -122,14 +123,22 @@ fun TopContentWidget() {
                 }
             }
     ) {
-        GoogleDriveCanvas(googleDriveState)
-
-        ICloudCanvas(iCloudState)
+        GoogleDriveCanvas(
+            googleDriveState = googleDriveState,
+            context = context
+        )
+        ICloudCanvas(
+            iCloudState = iCloudState,
+            context = context
+        )
     }
 }
 
 @Composable
-private fun GoogleDriveCanvas(googleDriveState: Boolean) {
+private fun GoogleDriveCanvas(
+    googleDriveState: Boolean,
+    context: Context
+) {
     // Text measurers for Google Drive
     val googleDriveMeasurer = rememberTextMeasurer()
     val googleSizeMeasurer = rememberTextMeasurer()
@@ -140,7 +149,7 @@ private fun GoogleDriveCanvas(googleDriveState: Boolean) {
     // Scale of Google Drive button
     val googleDriveScale by animateFloatAsState(
         targetValue = if (googleDriveState) 0.96f else 1f,
-        label = "Google Drive scale animation"
+        label = stringResource(R.string.google_drive_scale_animation)
     )
 
     Canvas(
@@ -157,13 +166,17 @@ private fun GoogleDriveCanvas(googleDriveState: Boolean) {
             sizeMeasurer = googleSizeMeasurer,
             firstNoteMeasurer = googleFirstNoteMeasurer,
             secondNoteMeasurer = googleSecondNoteMeasurer,
-            thirdNoteMeasurer = googleThirdNoteMeasurer
+            thirdNoteMeasurer = googleThirdNoteMeasurer,
+            context = context
         )
     }
 }
 
 @Composable
-private fun ICloudCanvas(iCloudState: Boolean) {
+private fun ICloudCanvas(
+    iCloudState: Boolean,
+    context: Context
+) {
     // Text measurers for iCloud
     val iCloudMeasurer = rememberTextMeasurer()
     val iCloudFirstNoteMeasurer = rememberTextMeasurer()
@@ -173,7 +186,7 @@ private fun ICloudCanvas(iCloudState: Boolean) {
     // Scale of iCloud button
     val iCloudScale by animateFloatAsState(
         targetValue = if (iCloudState) 0.96f else 1f,
-        label = "iCloud scale animation"
+        label = stringResource(R.string.icloud_scale_animation)
     )
 
     Canvas(
@@ -189,7 +202,8 @@ private fun ICloudCanvas(iCloudState: Boolean) {
             iCloudMeasurer = iCloudMeasurer,
             firstNoteMeasurer = iCloudFirstNoteMeasurer,
             secondNoteMeasurer = iCloudSecondNoteMeasurer,
-            thirdNoteMeasurer = iCloudThirdNoteMeasurer
+            thirdNoteMeasurer = iCloudThirdNoteMeasurer,
+            context = context
         )
     }
 }
@@ -200,13 +214,14 @@ private fun drawGoogleDrive(
     sizeMeasurer: TextMeasurer,
     firstNoteMeasurer: TextMeasurer,
     secondNoteMeasurer: TextMeasurer,
-    thirdNoteMeasurer: TextMeasurer
+    thirdNoteMeasurer: TextMeasurer,
+    context: Context
 ) {
     // Build Google Drive text
     val driveText = buildAnnotatedString {
         withStyle(style = ParagraphStyle(lineHeight = 48.sp)) {
             withStyle(style = SpanStyle(color = White, fontSize = 48.sp)) {
-                append("Google\nDrive")
+                append(context.getString(R.string.google_drive))
             }
         }
     }
@@ -214,28 +229,28 @@ private fun drawGoogleDrive(
     // Build size text
     val sizeText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = White, fontSize = 16.sp)) {
-            append("144 GB")
+            append(context.getString(R.string.gb_144))
         }
     }
 
     // Build first note text
     val firstNoteText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = White, fontSize = 16.sp)) {
-            append("photos * video * games")
+            append(context.getString(R.string.photos_video_games))
         }
     }
 
     // Build second note text
     val secondNoteText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = White, fontSize = 16.sp)) {
-            append("documents * PDF files")
+            append(context.getString(R.string.documents_pdf_files))
         }
     }
 
     // Build third note text
     val thirdNoteText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = White, fontSize = 16.sp)) {
-            append("icons * shots")
+            append(context.getString(R.string.icons_shots))
         }
     }
 
@@ -269,37 +284,57 @@ private fun drawGoogleDrive(
         drawPath(
             path = arrowPath,
             color = White,
-            style = Stroke(width = 4f, miter = 0f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+            style = Stroke(
+                width = 4f,
+                miter = 0f,
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round
+            )
         )
 
         drawText(
             textMeasurer = driveMeasurer,
             text = driveText,
-            topLeft = Offset(x = 8.dp.toPx(), y = size.height - 96.sp.toPx() - 8.dp.toPx())
+            topLeft = Offset(
+                x = 8.dp.toPx(),
+                y = size.height - 96.sp.toPx() - 8.dp.toPx()
+            )
         )
 
         drawText(
             textMeasurer = sizeMeasurer,
             text = sizeText,
-            topLeft = Offset(x = 16.dp.toPx(), y = 32.dp.toPx() - 8.sp.toPx())
+            topLeft = Offset(
+                x = 16.dp.toPx(),
+                y = 32.dp.toPx() - 8.sp.toPx()
+            )
         )
 
         drawText(
             textMeasurer = firstNoteMeasurer,
             text = firstNoteText,
-            topLeft = Offset(x = 8.dp.toPx(), y = size.height / 2 - 32.sp.toPx())
+            topLeft = Offset(
+                x = 8.dp.toPx(),
+                y = size.height / 2 - 32.sp.toPx()
+            )
         )
 
         drawText(
             textMeasurer = secondNoteMeasurer,
             text = secondNoteText,
-            topLeft = Offset(x = 8.dp.toPx(), y = size.height / 2)
+            topLeft = Offset(
+                x = 8.dp.toPx(),
+                y = size.height / 2
+            )
         )
 
         drawText(
             textMeasurer = thirdNoteMeasurer,
             text = thirdNoteText,
-            topLeft = Offset(x = 8.dp.toPx(), y = size.height / 2 + 32.sp.toPx())
+            topLeft = Offset(
+                x = 8.dp.toPx(),
+                y = size.height / 2 + 32.sp.toPx()
+            )
         )
     }
 }
@@ -309,13 +344,14 @@ private fun drawICloud(
     iCloudMeasurer: TextMeasurer,
     firstNoteMeasurer: TextMeasurer,
     secondNoteMeasurer: TextMeasurer,
-    thirdNoteMeasurer: TextMeasurer
+    thirdNoteMeasurer: TextMeasurer,
+    context: Context
 ) {
     // Build iCloud text
     val iCloudText = buildAnnotatedString {
         withStyle(style = ParagraphStyle(lineHeight = 48.sp)) {
             withStyle(style = SpanStyle(color = White, fontSize = 48.sp)) {
-                append("\nICloud")
+                append(context.getString(R.string.icloud))
             }
         }
     }
@@ -323,21 +359,21 @@ private fun drawICloud(
     // Build first note text
     val firstNoteText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = White, fontSize = 16.sp)) {
-            append("music")
+            append(context.getString(R.string.music))
         }
     }
 
     // Build second note text
     val secondNoteText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = White, fontSize = 16.sp)) {
-            append("podcasts")
+            append(context.getString(R.string.podcasts))
         }
     }
 
     // Build third note text
     val thirdNoteText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = White, fontSize = 16.sp)) {
-            append("design courses")
+            append(context.getString(R.string.design_courses))
         }
     }
 
@@ -371,7 +407,12 @@ private fun drawICloud(
         drawPath(
             path = arrowPath,
             color = White,
-            style = Stroke(width = 4f, miter = 0f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+            style = Stroke(
+                width = 4f,
+                miter = 0f,
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round
+            )
         )
 
         drawText(
@@ -386,19 +427,27 @@ private fun drawICloud(
         drawText(
             textMeasurer = firstNoteMeasurer,
             text = firstNoteText,
-            topLeft = Offset(x = size.width * 0.70f, y = size.height / 2 - 32.sp.toPx())
+            topLeft = Offset(
+                x = size.width * 0.70f,
+                y = size.height / 2 - 32.sp.toPx()
+            )
         )
 
         drawText(
             textMeasurer = secondNoteMeasurer,
             text = secondNoteText,
-            topLeft = Offset(x = size.width * 0.67f, y = size.height / 2)
+            topLeft = Offset(
+                x = size.width * 0.67f, y = size.height / 2
+            )
         )
 
         drawText(
             textMeasurer = thirdNoteMeasurer,
             text = thirdNoteText,
-            topLeft = Offset(x = size.width * 0.64f, y = size.height / 2 + 32.sp.toPx())
+            topLeft = Offset(
+                x = size.width * 0.64f,
+                y = size.height / 2 + 32.sp.toPx()
+            )
         )
     }
 }

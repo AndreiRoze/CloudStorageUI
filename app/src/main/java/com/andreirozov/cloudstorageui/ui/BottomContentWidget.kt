@@ -1,5 +1,6 @@
 package com.andreirozov.cloudstorageui.ui
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -31,6 +32,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextMeasurer
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.andreirozov.cloudstorageui.R
 import com.andreirozov.cloudstorageui.Utils
 import com.andreirozov.cloudstorageui.ui.theme.Black
 import com.andreirozov.cloudstorageui.ui.theme.LightWhite
@@ -104,14 +107,12 @@ fun BottomContentWidget() {
 
                     // Buttons click events
                     if (this.currentEvent.type == PointerEventType.Release && isDropboxTouch) {
-                        // TODO Dropbox click event
                         Toast
-                            .makeText(context, "Dropbox click", Toast.LENGTH_SHORT)
+                            .makeText(context, R.string.dropbox_click, Toast.LENGTH_SHORT)
                             .show()
                     } else if (this.currentEvent.type == PointerEventType.Release && isICloudTouch) {
-                        // TODO iCloud click event
                         Toast
-                            .makeText(context, "iCloud click", Toast.LENGTH_SHORT)
+                            .makeText(context, R.string.icloud_click, Toast.LENGTH_SHORT)
                             .show()
                     }
 
@@ -124,14 +125,23 @@ fun BottomContentWidget() {
                 }
             }
     ) {
-        DropboxCanvas(dropboxState)
+        DropboxCanvas(
+            dropboxState = dropboxState,
+            context = context
+        )
 
-        ICloudCanvas(iCloudState)
+        ICloudCanvas(
+            iCloudState = iCloudState,
+            context = context
+        )
     }
 }
 
 @Composable
-private fun DropboxCanvas(dropboxState: Boolean) {
+private fun DropboxCanvas(
+    dropboxState: Boolean,
+    context: Context
+) {
     // Text measurers for Dropbox
     val dropboxMeasurer = rememberTextMeasurer()
     val dropboxSizeMeasurer = rememberTextMeasurer()
@@ -139,7 +149,7 @@ private fun DropboxCanvas(dropboxState: Boolean) {
     // Scale of Dropbox button
     val dropboxScale by animateFloatAsState(
         targetValue = if (dropboxState) 0.96f else 1f,
-        label = "Dropbox scale animation"
+        label = stringResource(R.string.dropbox_scale_animation)
     )
 
     Canvas(
@@ -153,13 +163,17 @@ private fun DropboxCanvas(dropboxState: Boolean) {
         drawDropbox(
             drawScope = this,
             dropboxMeasurer = dropboxMeasurer,
-            sizeMeasurer = dropboxSizeMeasurer
+            sizeMeasurer = dropboxSizeMeasurer,
+            context = context
         )
     }
 }
 
 @Composable
-private fun ICloudCanvas(iCloudState: Boolean) {
+private fun ICloudCanvas(
+    iCloudState: Boolean,
+    context: Context
+) {
     // Text measurers for iCloud
     val iCloudMeasurer = rememberTextMeasurer()
     val iCloudSizeMeasurer = rememberTextMeasurer()
@@ -167,7 +181,7 @@ private fun ICloudCanvas(iCloudState: Boolean) {
     // Scale of iCloud button
     val iCloudScale by animateFloatAsState(
         targetValue = if (iCloudState) 0.96f else 1f,
-        label = "iCloud scale animation"
+        label = stringResource(R.string.icloud_scale_animation)
     )
 
     Canvas(
@@ -181,7 +195,8 @@ private fun ICloudCanvas(iCloudState: Boolean) {
         drawICloud(
             drawScope = this,
             iCloudMeasurer = iCloudMeasurer,
-            sizeMeasurer = iCloudSizeMeasurer
+            sizeMeasurer = iCloudSizeMeasurer,
+            context = context
         )
     }
 }
@@ -189,13 +204,14 @@ private fun ICloudCanvas(iCloudState: Boolean) {
 private fun drawDropbox(
     drawScope: DrawScope,
     dropboxMeasurer: TextMeasurer,
-    sizeMeasurer: TextMeasurer
+    sizeMeasurer: TextMeasurer,
+    context: Context
 ) {
     // Build Dropbox text
     val dropboxText = buildAnnotatedString {
         withStyle(style = ParagraphStyle(lineHeight = 48.sp)) {
             withStyle(style = SpanStyle(color = White, fontSize = 48.sp)) {
-                append("Dropbox")
+                append(context.getString(R.string.dropbox))
             }
         }
     }
@@ -203,7 +219,7 @@ private fun drawDropbox(
     // Build size text
     val sizeText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = White, fontSize = 16.sp)) {
-            append("28 GB")
+            append(context.getString(R.string.gb_28))
         }
     }
 
@@ -237,7 +253,12 @@ private fun drawDropbox(
         drawPath(
             path = arrowPath,
             color = White,
-            style = Stroke(width = 4f, miter = 0f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+            style = Stroke(
+                width = 4f,
+                miter = 0f,
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round
+            )
         )
 
         rotate(degrees = 11f) {
@@ -246,7 +267,7 @@ private fun drawDropbox(
                 text = dropboxText,
                 topLeft = Offset(
                     x = size.width - 24.dp.toPx() - dropboxMeasurer.measure(
-                        "Dropbox",
+                        context.getString(R.string.dropbox),
                         style = TextStyle(fontSize = 48.sp, lineHeight = 48.sp)
                     ).size.width,
                     y = size.height * 0.5f - 48.sp.toPx() - 50.dp.toPx()
@@ -257,7 +278,10 @@ private fun drawDropbox(
         drawText(
             textMeasurer = sizeMeasurer,
             text = sizeText,
-            topLeft = Offset(x = 16.dp.toPx(), y = 32.dp.toPx() - 8.sp.toPx())
+            topLeft = Offset(
+                x = 16.dp.toPx(),
+                y = 32.dp.toPx() - 8.sp.toPx()
+            )
         )
     }
 }
@@ -265,13 +289,14 @@ private fun drawDropbox(
 private fun drawICloud(
     drawScope: DrawScope,
     iCloudMeasurer: TextMeasurer,
-    sizeMeasurer: TextMeasurer
+    sizeMeasurer: TextMeasurer,
+    context: Context
 ) {
     // Build iCloud text
     val iCloudText = buildAnnotatedString {
         withStyle(style = ParagraphStyle(lineHeight = 48.sp)) {
             withStyle(style = SpanStyle(color = Black, fontSize = 48.sp)) {
-                append("ICloud")
+                append(context.getString(R.string.icloud))
             }
         }
     }
@@ -279,7 +304,7 @@ private fun drawICloud(
     // Build size text
     val sizeText = buildAnnotatedString {
         withStyle(style = SpanStyle(color = Black, fontSize = 16.sp)) {
-            append("19 GB")
+            append(context.getString(R.string.gb_19))
         }
     }
 
@@ -315,7 +340,10 @@ private fun drawICloud(
             drawText(
                 textMeasurer = iCloudMeasurer,
                 text = iCloudText,
-                topLeft = Offset(x = 16.dp.toPx(), y = size.height * 0.3f + 50.dp.toPx())
+                topLeft = Offset(
+                    x = 16.dp.toPx(),
+                    y = size.height * 0.3f + 50.dp.toPx()
+                )
             )
         }
 
@@ -325,9 +353,10 @@ private fun drawICloud(
                 text = sizeText,
                 topLeft = Offset(
                     x = size.width - 8.dp.toPx() - iCloudMeasurer.measure(
-                        "19 GB",
+                        context.getString(R.string.gb_19),
                         style = TextStyle(fontSize = 16.sp)
-                    ).size.width, y = size.height * 0.5f + 8.dp.toPx()
+                    ).size.width,
+                    y = size.height * 0.5f + 8.dp.toPx()
                 )
             )
         }
