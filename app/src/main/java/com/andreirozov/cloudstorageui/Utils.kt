@@ -16,7 +16,7 @@ object Utils {
             maxY = coordinate.y.coerceAtLeast(maxY)
         }
 
-        if (point.x < minX || point.x > maxX || point.y < minY || point.y > maxY) {
+        if (point.x !in minX..maxX || point.y !in minY..maxY) {
             return false
         }
 
